@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from user import views
+import user.views as user_views
+import topic.views as topic_views
+import collaborate.views as collaborate_views
 from rest_framework.documentation import include_docs_urls
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -23,10 +25,37 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
+    # admin
     path('admin/', admin.site.urls),
-    path('api/test/', views.hello),
+    # test api is working
+    path('api/test/', user_views.hello),
+    # login
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/users/register', views.CreateUserView.as_view(), name='user_register'),
+    # user
+    path('api/users/register/', user_views.CreateUserView.as_view(), name='user_register'),
+    # topics
+    path('api/topics/children/<int:id>', topic_views.TopicChildrenView.as_view(), name='get_topic_children'),
+    path('api/topics/roots', topic_views.TopicRootsView.as_view(), name='get_topic_children'),
+    path('api/topics/tree/<int:id>', topic_views.TopicSubtreeView.as_view(), name='get-topic-subtree'),
+    path('api/topics/tree', topic_views.TopicTreeView.as_view(), name='get-topic-tree'),
+    # demands (inactive group)
+    path('api/demands/create', collaborate_views.CreateGroupView.as_view(), name='create-demand'),
+    path('api/demands/all', collaborate_views.AllDemandsView.as_view(), name='all-demands'),
+    path('api/demands/owned', collaborate_views.OwnedDemandsView.as_view(), name='owned-demands'),
+    path('api/demands/search', collaborate_views.SearchDemandsView.as_view(), name='search-demands'),
+    # active groups
+    path('api/groups/all', collaborate_views.AllActiveGroupsView.as_view(), name='all-active-groups'),
+    path('api/groups/owned', collaborate_views.OwnedActiveGroupsView.as_view(), name='owned-active-groups'),
+    path('api/groups/joined', collaborate_views.JoinedGroupsView.as_view(), name='my-joined-groups'),
+    path('api/groups/members/<int:pk>', collaborate_views.GroupMembers.as_view(), name='group-members'),
+    # join requests
+    path('api/join', collaborate_views.MakeJoinRequest.as_view(), name='make-join-request'),
+    path('api/requests/sent', collaborate_views.SentJoinRequests.as_view(), name='sent-join-requests'),
+    path('api/requests/owned', collaborate_views.OwnedGroupsJoinRequests.as_view(), name='owned-group-join-requests'),
+    path('api/requests/answer/<int:pk>', collaborate_views.AnswerJoinRequest.as_view(),
+         name='answer-join-request'),
+
+    # documentation
     path('docs/', include_docs_urls(title='Study mate API documentation', public=True))
 ]

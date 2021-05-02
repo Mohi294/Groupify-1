@@ -1,3 +1,143 @@
-from django.shortcuts import render
+from collaborate.serializers import GroupSerializer, GroupSearchSerializer, JoinRequestSerializer, \
+    AnswerJoinRequestSerializer
+from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
+from collaborate.models import Group, JoinRequest
+from rest_framework.views import APIView
+from django.db.models import Func, F
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.serializers import ValidationError
+from user.serializers import SimpleUserSerializer
+from django.shortcuts import get_object_or_404
 
-# Create your views here.
+
+class CreateGroupView(CreateAPIView):
+    """
+    creates a new group for the **authorized** user
+
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user,
+                        active=False)
+
+
+class OwnedActiveGroupsView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+
+    def get_queryset(self):
+        return Group.objects.filter(owner=self.request.user, active=True).order_by('-created_at')
+
+
+class OwnedDemandsView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+
+    def get_queryset(self):
+        return Group.objects.filter(owner=self.request.user, active=False).order_by('-created_at')
+
+
+class AllActiveGroupsView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+    queryset = Group.objects.filter(active=True).order_by('-created_at')
+
+
+class AllDemandsView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+    queryset = Group.objects.filter(active=False).order_by('-created_at')
+
+
+class JoinedGroupsView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+
+    def get_queryset(self):
+        return self.request.user.joined_groups
+
+
+class SearchDemandsView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, format=None):
+        serializer = GroupSearchSerializer(data=request.data)
+        if serializer.is_valid():
+            # just searching in inactive groups (demands)
+            topic = serializer.validated_data.get('topic')
+            weeks = serializer.validated_data.get('weeks')
+            hours = serializer.validated_data.get('hours_per_week')
+            groups = Group.objects.filter(active=False, topic=topic).annotate(
+                weeks_diff=Func(F('weeks') - weeks, function='ABS'),
+                hours_diff=Func(F('hours_per_week') - hours, function='ABS')
+            ).order_by('hours_diff', 'weeks_diff')
+            # TODO: paginate later
+            group_serializer = GroupSerializer(groups, many=True)
+            return Response(group_serializer.data, status=200)
+        else:
+            return Response(serializer.errors)
+
+
+class MakeJoinRequest(CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = JoinRequestSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class OwnedGroupsJoinRequests(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = JoinRequestSerializer
+
+    def get_queryset(self):
+        return JoinRequest.objects.filter(group__owner=self.request.user)
+
+
+class SentJoinRequests(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = JoinRequestSerializer
+
+    def get_queryset(self):
+        return JoinRequest.objects.filter(user=self.request.user)
+
+
+class AnswerJoinRequest(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AnswerJoinRequestSerializer
+
+    def get_queryset(self):
+        return JoinRequest.objects.filter(group__owner=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        if instance.accepted is not None:
+            raise ValidationError({"detail": "request is already answered"}, code=status.HTTP_403_FORBIDDEN)
+        if serializer.validated_data.get('accepted'):
+            group = instance.group
+            if not group.active:
+                group.active = True
+                group.members.add(group.owner)
+            group.members.add(instance.user)
+            self.perform_update(serializer)
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        else:
+            self.perform_update(serializer)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GroupMembers(ListAPIView):
+    serializer_class = SimpleUserSerializer
+    permission_classes = (IsAuthenticated,)
+    lookup_url_kwarg = 'pk'
+
+    def get_queryset(self):
+        pk = int(self.kwargs.get(self.lookup_url_kwarg))
+        group = get_object_or_404(Group, pk=pk)
+        return group.members
