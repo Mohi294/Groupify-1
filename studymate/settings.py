@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'mptt',
     'topic.apps.TopicConfig',
-    'collaborate.apps.CollaborateConfig'
+    'collaborate.apps.CollaborateConfig',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [

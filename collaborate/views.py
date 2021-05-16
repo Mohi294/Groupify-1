@@ -1,15 +1,18 @@
 from collaborate.serializers import GroupSerializer, GroupSearchSerializer, JoinRequestSerializer, \
-    AnswerJoinRequestSerializer
+    AnswerJoinRequestSerializer, MessegerSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
-from collaborate.models import Group, JoinRequest
+from collaborate.models import Group, JoinRequest, Messenger
 from rest_framework.views import APIView
 from django.db.models import Func, F
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.serializers import ValidationError
 from user.serializers import SimpleUserSerializer
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+from django.contrib.auth import authenticate, get_user_model
 
 
 class CreateGroupView(CreateAPIView):
@@ -141,3 +144,43 @@ class GroupMembers(ListAPIView):
         pk = int(self.kwargs.get(self.lookup_url_kwarg))
         group = get_object_or_404(Group, pk=pk)
         return group.members
+
+
+@csrf_exempt
+def message_list(request, sender=None, receiver=None):
+    """
+    List all required messages, or create a new message.
+    """
+    if request.method == 'GET':
+        messages = Messenger.objects.filter(
+            sender_id=sender, receiver_id=receiver, is_read=False)
+        serializer = MessegerSerializer(
+            messages, many=True, context={'request': request})
+        for message in messages:
+            message.is_read = True
+            message.save()
+        return Response(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = MessegerSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+
+
+def chat_view(request):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+    if request.method == "GET":
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
+
+def message_view(request, sender, receiver):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessegerSerializer
+    if request.method == "GET":
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
+

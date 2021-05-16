@@ -55,6 +55,13 @@ urlpatterns = [
     path('api/requests/owned', collaborate_views.OwnedGroupsJoinRequests.as_view(), name='owned-group-join-requests'),
     path('api/requests/answer/<int:pk>', collaborate_views.AnswerJoinRequest.as_view(),
          name='answer-join-request'),
+    # chat urls
+    
+    path('chat/', collaborate_views.chat_view, name='chats'),
+    path('chat/<int:sender>/<int:receiver>/', collaborate_views.message_view, name='chat'),
+    path('api/messages/<int:sender>/<int:receiver>/',
+         collaborate_views.message_list, name='message-detail'),
+    path('api/messages/', collaborate_views.message_list, name='message-list'),
 
     # documentation
     path('docs/', include_docs_urls(title='Study mate API documentation', public=True))

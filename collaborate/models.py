@@ -31,12 +31,18 @@ class JoinRequest(models.Model):
         unique_together = (('group', 'user'),)
 
 
-class messenger(model.Model):
+class Messenger(models.Model):
 
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(get_user_model(
-        ), on_delete=models.CASCADE, null=False, related_name='join_requests')
-    group = models.ForeignKey(
-        Group, on_delete=models.CASCADE, related_name='messages', null=False)
-    text = models.TextField()
-    sentAt = models.TimeField(auto_now_add=True)
+    sender = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(
+        Group, on_delete=models.CASCADE, related_name='reciever', null=False)
+    text = models.CharField(max_length=1200)
+    sentAt = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        ordering = ('sentAt',)

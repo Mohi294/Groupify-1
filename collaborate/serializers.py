@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from collaborate.models import Group, JoinRequest
+from collaborate.models import Group, JoinRequest, Messenger
 
 from user.serializers import SimpleUserSerializer
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from topic.serializers import TopicSerializer
 from topic.models import Topic
 from rest_framework import status
@@ -76,3 +77,17 @@ class AnswerJoinRequestSerializer(serializers.ModelSerializer):
         model = JoinRequest
         fields = ('id', 'group', 'user', 'accepted')
         read_only_fields = ('group', 'user')
+
+
+class MessegerSerializer(serializers.ModelSerializer):
+    
+    sender = serializers.SlugRelatedField(
+        many=False, slug_field='username', queryset=User.objects.all())
+    receiver = serializers.SlugRelatedField(
+        many=False, slug_field='receiver', queryset=Group.objects.all())
+    text = serializers.CharField(read_only=True)
+    sentAt = serializers.DateTimeField(read_only = True)
+
+    class Meta:
+        model = Messenger
+        fields = ['sender', 'group', 'text', 'sentAt']
