@@ -79,15 +79,15 @@ class AnswerJoinRequestSerializer(serializers.ModelSerializer):
         read_only_fields = ('group', 'user')
 
 
-class MessegerSerializer(serializers.ModelSerializer):
+class MessengerSerializer(serializers.ModelSerializer):
     
     sender = serializers.SlugRelatedField(
         many=False, slug_field='username', queryset=User.objects.all())
     receiver = serializers.SlugRelatedField(
-        many=False, slug_field='receiver', queryset=Group.objects.all())
-    text = serializers.CharField(read_only=True)
+        many=False, slug_field='id', queryset=Group.objects.all())
+    text = serializers.CharField()
     sentAt = serializers.DateTimeField(read_only = True)
 
     class Meta:
         model = Messenger
-        fields = ['sender', 'group', 'text', 'sentAt']
+        fields = ['sender', 'receiver', 'text', 'sentAt']

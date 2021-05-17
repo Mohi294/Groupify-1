@@ -57,11 +57,13 @@ urlpatterns = [
          name='answer-join-request'),
     # chat urls
     
-    path('chat/', collaborate_views.chat_view, name='chats'),
-    path('chat/<int:sender>/<int:receiver>/', collaborate_views.message_view, name='chat'),
+    path('chat/', collaborate_views.message_group.as_view(), name='chats'),
+    path('chat/<int:sender>/<int:receiver>/',
+         collaborate_views.message_view.as_view(), name='chat'),
     path('api/messages/<int:sender>/<int:receiver>/',
-         collaborate_views.message_list, name='message-detail'),
-    path('api/messages/', collaborate_views.message_list, name='message-list'),
+         collaborate_views.message_show.as_view(), name='message-detail'),
+    path('api/messages/', collaborate_views.message_create.as_view(),
+         name='message-list'),
 
     # documentation
     path('docs/', include_docs_urls(title='Study mate API documentation', public=True))

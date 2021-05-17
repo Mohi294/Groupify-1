@@ -1,5 +1,5 @@
 from collaborate.serializers import GroupSerializer, GroupSearchSerializer, JoinRequestSerializer, \
-    AnswerJoinRequestSerializer, MessegerSerializer
+    AnswerJoinRequestSerializer, MessengerSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from collaborate.models import Group, JoinRequest, Messenger
@@ -146,41 +146,56 @@ class GroupMembers(ListAPIView):
         return group.members
 
 
-@csrf_exempt
-def message_list(request, sender=None, receiver=None):
-    """
-    List all required messages, or create a new message.
-    """
-    if request.method == 'GET':
+class message_show(UpdateAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessengerSerializer
+
+    @csrf_exempt
+    def message_update(self, request, sender=None, receiver=None):
+       
         messages = Messenger.objects.filter(
             sender_id=sender, receiver_id=receiver, is_read=False)
-        serializer = MessegerSerializer(
-            messages, many=True, context={'request': request})
+        serializer = MessengerSerializer(
+        messages, many=True, context={'request': request})
         for message in messages:
             message.is_read = True
             message.save()
-        return Response(serializer.data, safe=False)
 
-    elif request.method == 'POST':
+        return Response(serializer.data, safe=False)      
+
+
+
+class message_group(ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+
+    @csrf_exempt
+    def get_queryset(self):        
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
+
+
+
+class message_view(ListAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessengerSerializer
+
+    @csrf_exempt
+    def get_queryset(self):
+        return Response(serializer_class.data, status=status.HTTP_200_OK)
+
+
+
+class message_create(CreateAPIView):
+    serializer_class = MessengerSerializer
+
+    @csrf_exempt
+    def message_create(self, request, sender=None, receiver=None):
         data = JSONParser().parse(request)
-        serializer = MessegerSerializer(data=data)
+        serializer = MessengerSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
-
-
-
-
-def chat_view(request):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = GroupSerializer
-    if request.method == "GET":
-        return Response(serializer_class.data, status=status.HTTP_200_OK)
-
-def message_view(request, sender, receiver):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = MessegerSerializer
-    if request.method == "GET":
-        return Response(serializer_class.data, status=status.HTTP_200_OK)
-
