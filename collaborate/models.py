@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from mptt.models import TreeForeignKey
 from topic.models import Topic
+# from django.core.exceptions import ValidationError
 
 
 
@@ -46,3 +47,29 @@ class Messenger(models.Model):
 
     class Meta:
         ordering = ('sentAt',)
+
+
+class GP_Rate(models.Model):
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name='retaed_user')
+    group = models.ForeignKey(
+        Group, on_delete=models.CASCADE, related_name='participated_group')
+    rate = models.SmallIntegerField(max_value=10, min_value=0)
+    duration = models.SmallIntegerField(max_value=53, min_value=1)
+
+    def __str__(self):
+        return self.rate
+
+    class Meta:
+        ordering = ('user',)
+
+class Avg_Rate(models.Model):
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE)
+    avgRate = models.FloatField(min_value = 0, max_value = 10)
+    
+    def __str__(self):
+        return self.avgRate
+
+    class Meta:
+        ordering = ('user',)
