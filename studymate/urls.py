@@ -55,14 +55,16 @@ urlpatterns = [
     path('api/requests/owned', collaborate_views.OwnedGroupsJoinRequests.as_view(), name='owned-group-join-requests'),
     path('api/requests/answer/<int:pk>', collaborate_views.AnswerJoinRequest.as_view(),
          name='answer-join-request'),
-    # chat urls
-    
+    # chat urls    
     path('chat/', collaborate_views.message_group.as_view(), name='chats'),
     path('chat/<int:sender>/<int:receiver>/',
          collaborate_views.message_view.as_view(), name='chat'),
     path('api/messages/<int:sender>/<int:receiver>/',
          collaborate_views.message_show.as_view(), name='message-detail'),
     path('api/messages/', collaborate_views.message_create.as_view(),
+         name='message-list'),
+    #rating urls
+    path('api/rating/', collaborate_views.GPrating_create.as_view(),
          name='message-list'),
 
     # documentation
