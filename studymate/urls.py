@@ -64,8 +64,8 @@ urlpatterns = [
     path('api/messages/', collaborate_views.message_create.as_view(),
          name='message-list'),
     #rating urls
-    path('api/rating/', collaborate_views.GPrating_create.as_view(),
-         name='message-list'),
+    # path('api/rating/', collaborate_views.GPrating_create.as_view(),
+    #      name='message-list'),
 
     # documentation
     path('docs/', include_docs_urls(title='Study mate API documentation', public=True))

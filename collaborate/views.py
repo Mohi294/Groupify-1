@@ -1,5 +1,5 @@
 from collaborate.serializers import GroupSerializer, GroupSearchSerializer, JoinRequestSerializer, \
-    AnswerJoinRequestSerializer, MessengerSerializer, GP_rateSerializer, Avg_RateSerializer
+    AnswerJoinRequestSerializer, MessengerSerializer #GP_rateSerializer, Avg_RateSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from collaborate.models import Group, JoinRequest, Messenger
@@ -201,20 +201,20 @@ class message_create(CreateAPIView):
         return Response(serializer.errors, status=400)
 
 
-class GPrating_create(CreateAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = GP_rateSerializer
+# class GPrating_create(CreateAPIView):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = GP_rateSerializer
 
-    def GPrating_create(self, request, user=self.request.user, group=self.request.group):
-        data = JSONParser().parser(request)
-        serializer = GP_rateSerializer(data=data)
-        if serializer.isvalid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status = 400)
+#     def GPrating_create(self, request, user=self.request.user, group=self.request.group):
+#         data = JSONParser().parser(request)
+#         serializer = GP_rateSerializer(data=data)
+#         if serializer.isvalid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status = 400)
 
-class Avg_Show(APIView):
-    serializer_class = Avg_RateSerializer
+# class Avg_Show(APIView):
+#     serializer_class = Avg_RateSerializer
 
-    def get_queryset(self):
-        return Response(serializer_class.data, status=status.HTTP_200_OK)
+#     def get_queryset(self):
+#         return Response(serializer_class.data, status=status.HTTP_200_OK)

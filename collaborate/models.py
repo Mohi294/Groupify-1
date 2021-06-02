@@ -49,27 +49,28 @@ class Messenger(models.Model):
         ordering = ('sentAt',)
 
 
-class GP_Rate(models.Model):
-    user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name='retaed_user')
-    group = models.ForeignKey(
-        Group, on_delete=models.CASCADE, related_name='participated_group')
-    rate = models.SmallIntegerField(max_value=10, min_value=0)
-    duration = models.SmallIntegerField(max_value=53, min_value=1)
+# class GP_Rate(models.Model):
+#     rating_user = models.ForeignKey(
+#         get_user_model(), on_delete=models.CASCADE, related_name='reting_user')
+#     rated_user = models.ForeignKey(
+#         get_user_model(), on_delete=models.CASCADE, related_name='reted_user')
+#     rate = models.SmallIntegerField(max_length=10)
+#     duration = models.SmallIntegerField(max_length=53, null=True, blank=True)
 
-    def __str__(self):
-        return self.rate
+#     def __str__(self):
+#         return self.rate
 
-    class Meta:
-        ordering = ('user',)
+#     class Meta:
+#         ordering = ('user',)
 
-class Avg_Rate(models.Model):
-    user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE)
-    avgRate = models.FloatField(min_value = 0, max_value = 10)
+# class Avg_Rate(models.Model):
+#     user = models.ForeignKey(
+#         get_user_model(), on_delete=models.CASCADE)
+#     avgRate = models.FloatField(max_length=10)
+#     overal_duration = models.IntegerField()
     
-    def __str__(self):
-        return self.avgRate
+#     def __str__(self):
+#         return self.avgRate
 
-    class Meta:
-        ordering = ('user',)
+#     class Meta:
+#         ordering = ('user',)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from collaborate.models import Group, JoinRequest, Messenger, GP_Rate, Avg_Rate
+from collaborate.models import Group, JoinRequest, Messenger#, GP_Rate, Avg_Rate
 
 from user.serializers import SimpleUserSerializer
 from django.contrib.auth import get_user_model
@@ -93,20 +93,20 @@ class MessengerSerializer(serializers.ModelSerializer):
         fields = ['sender', 'receiver', 'text', 'sentAt']
 
 
-class GP_rateSerializer(serializers.ModelSerializer):
-    user = SimpleUserSerializer(read_only=True)
-    group = GroupSerializer(read_only = True)
-    rate = serializers.SmallIntegerField()
-    duration = serializers.SmallIntegerField()
+# class GP_rateSerializer(serializers.ModelSerializer):
+#     user = SimpleUserSerializer(read_only=True)
+#     group = GroupSerializer(read_only = True)
+#     rate = serializers.SmallIntegerField()
+#     duration = serializers.SmallIntegerField()
     
-    class Meta:
-        model = GP_Rate
-        fields = ['user', 'group', 'rate', 'duration']
+#     class Meta:
+#         model = GP_Rate
+#         fields = ['user', 'group', 'rate', 'duration']
 
 
-class Avg_RateSerializer(serializers.ModelSerializer):
-    user = SimpleUserSerializer(read_only=True)
-    avgRate = serializers.floatField()
-    class Meta:
-        model = Avg_Rate
-        fields = ['user', 'avgRate']
+# class Avg_RateSerializer(serializers.ModelSerializer):
+#     user = SimpleUserSerializer(read_only=True)
+#     overal_duration = serializers.IntegerField()
+#     class Meta:
+#         model = Avg_Rate
+#         fields = ['user', 'overal_duration']
