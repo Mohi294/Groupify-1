@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     'mptt',
     'topic.apps.TopicConfig',
     'collaborate.apps.CollaborateConfig',
-    'widget_tweaks'
+    
 ]
 
 MIDDLEWARE = [
