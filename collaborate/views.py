@@ -146,49 +146,67 @@ class GroupMembers(ListAPIView):
         return group.members
 
 
-class message_show(UpdateAPIView):
+class message_user_show(ListAPIView):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = MessengerSerializer
 
     @csrf_exempt
-    def message_update(self, request, sender=None, receiver=None):
+    def message_show(self, request, sender=None, receiver=None):
        
         messages = Messenger.objects.filter(
             sender_id=sender, receiver_id=receiver, is_read=False)
         serializer = MessengerSerializer(
         messages, many=True, context={'request': request})
-        for message in messages:
-            message.is_read = True
-            message.save()
+        
 
         return Response(serializer.data, safe=False)      
 
 
-
 class message_group(ListAPIView):
 
-    permission_classes = (IsAuthenticated,)
-    serializer_class = GroupSerializer
+    permission_classes=(IsAuthenticated,)
+    serializer_class=MessengerSerializer
 
-    @csrf_exempt
-    def get_queryset(self):        
-        return Response(serializer_class.data, status=status.HTTP_200_OK)
+    @ csrf_exempt
+    def message_update(self, request, receiver = None):
+        messages=Messenger.objects.filter(receiver_id = receiver)
+        serializer=MessengerSerializer(
+        messages, many=True, context={'request': request})
+        for message in messages:
+            if message.user != request.user:
+                message.is_read = True
+                message.save()
+        return Response(serializer.data, safe=False)
+
+    @ csrf_exempt
+    def message_get(self, request, receiver=None):
+        messages = Messenger.objects.filter(receiver_id=receiver)
+        count = 0
+        for message in messages:
+            if message.is_read == False and request.user != message.user:
+                count = count + 1
+        return count
 
 
+# class message_notif(ListAPIView):
 
-class message_view(ListAPIView):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = MessengerSerializer
 
-    permission_classes = (IsAuthenticated,)
-    serializer_class = MessengerSerializer
-
-    @csrf_exempt
-    def get_queryset(self):
-        return Response(serializer_class.data, status=status.HTTP_200_OK)
+#     @ csrf_exempt
+#     def message_new(self, request, receiver=None):
+#         messages = Messenger.objects.filter(receiver_id=receiver)
+#         count = 0
+#         for message in messages:
+#             if message.is_read == False & request.user != message.user:
+#                 count = count + 1
+#         return count
 
 
 
 class message_create(CreateAPIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = MessengerSerializer
 
     @csrf_exempt

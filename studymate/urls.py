@@ -56,13 +56,11 @@ urlpatterns = [
     path('api/requests/answer/<int:pk>', collaborate_views.AnswerJoinRequest.as_view(),
          name='answer-join-request'),
     # chat urls    
-    path('chat/', collaborate_views.message_group.as_view(), name='chats'),
+    path('chat/<int:receiver>/', collaborate_views.message_group.as_view(), name='group-chats'),
     path('chat/<int:sender>/<int:receiver>/',
-         collaborate_views.message_view.as_view(), name='chat'),
-    path('api/messages/<int:sender>/<int:receiver>/',
-         collaborate_views.message_show.as_view(), name='message-detail'),
+         collaborate_views.message_user_show.as_view(), name='user-group-chat'),
     path('api/messages/', collaborate_views.message_create.as_view(),
-         name='message-list'),
+         name='message-create'),
     #rating urls
     # path('api/rating/', collaborate_views.GPrating_create.as_view(),
     #      name='message-list'),
