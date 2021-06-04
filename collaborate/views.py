@@ -171,14 +171,17 @@ class message_group(ListAPIView):
 
     permission_classes=(IsAuthenticated,)
     serializer_class=MessengerSerializer
+    
+    def get_queryset(self):
+        return Messenger.objects.filter(receiver__owner = self.request.user.id)
 
     @ csrf_exempt
-    def message_update(self, request, receiver = None):
+    def update(self, request, receiver = None):
         messages=Messenger.objects.filter(receiver_id = receiver)
         serializer=MessengerSerializer(
         messages, many=True, context={'request': request})
         for message in messages:
-            if message.user != request.user:
+            if message.sender != request.user:
                 message.is_read = True
                 message.save()
         return Response(serializer.data, safe=False)
