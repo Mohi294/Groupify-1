@@ -14,6 +14,8 @@ class GroupSerializer(serializers.ModelSerializer):
     topic = TopicSerializer(many=False, read_only=True)
     specified_topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all(), write_only=True)
 
+    
+
     # TODO: topic should be at fourth level
 
     class Meta:
@@ -28,6 +30,10 @@ class GroupSerializer(serializers.ModelSerializer):
         topic = validated_data.pop('specified_topic')
         validated_data['topic'] = topic
         return Group.objects.create(**validated_data)
+
+    
+
+    
 
 
 # TODO: simple group serializer for read
@@ -81,16 +87,36 @@ class AnswerJoinRequestSerializer(serializers.ModelSerializer):
 
 class MessengerSerializer(serializers.ModelSerializer):
     
-    sender = serializers.SlugRelatedField(
-        many=False, slug_field='username', queryset=User.objects.all())
-    receiver = serializers.SlugRelatedField(
-        many=False, slug_field='id', queryset=Group.objects.all())
+    sender = SimpleUserSerializer(read_only = True)
+    receiver = GroupSerializer(read_only=True)
     text = serializers.CharField()
     sentAt = serializers.DateTimeField(read_only = True)
 
     class Meta:
         model = Messenger
         fields = ['sender', 'receiver', 'text', 'sentAt']
+
+
+class dashboardSerializer(serializers.ModelSerializer):
+    owner = SimpleUserSerializer(many=False, read_only=True)
+    topic = TopicSerializer(many=False, read_only=True)
+    
+    newMesseges = serializers.SerializerMethodField()
+
+
+    class Meta:
+        model = Group
+        fields=['topic', 'owner', 'newMesseges']
+
+    def get_newMesseges(self, obj):
+        messeges = Messenger.objects.all()
+        request = self.context.get('request')
+        count = 0
+        for messege in messeges:
+            if messege.receiver == obj and messege.is_read == False and messege.sender.id != request.user.id:
+                count = count + 1
+        return count
+        
 
 
 # class GP_rateSerializer(serializers.ModelSerializer):

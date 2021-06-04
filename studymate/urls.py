@@ -46,7 +46,7 @@ urlpatterns = [
     path('api/demands/search', collaborate_views.SearchDemandsView.as_view(), name='search-demands'),
     # active groups
     path('api/groups/all', collaborate_views.AllActiveGroupsView.as_view(), name='all-active-groups'),
-    path('api/groups/owned', collaborate_views.OwnedActiveGroupsView.as_view(), name='owned-active-groups'),
+    path('api/groups/owned/', collaborate_views.OwnedActiveGroupsView.as_view(), name='owned-active-groups'),
     path('api/groups/joined', collaborate_views.JoinedGroupsView.as_view(), name='my-joined-groups'),
     path('api/groups/members/<int:pk>', collaborate_views.GroupMembers.as_view(), name='group-members'),
     # join requests
@@ -65,6 +65,8 @@ urlpatterns = [
     # path('api/rating/', collaborate_views.GPrating_create.as_view(),
     #      name='message-list'),
 
+    # dashboard
+    path('api/dashboard/<int:owner>/', collaborate_views.dashboard.as_view(), name='personal_dashboard'),
     # documentation
     path('docs/', include_docs_urls(title='Study mate API documentation', public=True))
 ]

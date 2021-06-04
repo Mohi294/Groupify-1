@@ -1,5 +1,5 @@
 from collaborate.serializers import GroupSerializer, GroupSearchSerializer, JoinRequestSerializer, \
-    AnswerJoinRequestSerializer, MessengerSerializer #GP_rateSerializer, Avg_RateSerializer
+    AnswerJoinRequestSerializer, MessengerSerializer, dashboardSerializer #GP_rateSerializer, Avg_RateSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from collaborate.models import Group, JoinRequest, Messenger
@@ -30,7 +30,7 @@ class CreateGroupView(CreateAPIView):
 
 class OwnedActiveGroupsView(ListAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = GroupSerializer
+    serializer_class = GroupSerializer    
 
     def get_queryset(self):
         return Group.objects.filter(owner=self.request.user, active=True).order_by('-created_at')
@@ -43,11 +43,15 @@ class OwnedDemandsView(ListAPIView):
     def get_queryset(self):
         return Group.objects.filter(owner=self.request.user, active=False).order_by('-created_at')
 
+    
+
 
 class AllActiveGroupsView(ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
     queryset = Group.objects.filter(active=True).order_by('-created_at')
+
+    
 
 
 class AllDemandsView(ListAPIView):
@@ -179,31 +183,17 @@ class message_group(ListAPIView):
                 message.save()
         return Response(serializer.data, safe=False)
 
-    @ csrf_exempt
-    def message_get(self, request, receiver=None):
-        messages = Messenger.objects.filter(receiver_id=receiver)
-        count = 0
-        for message in messages:
-            if message.is_read == False and request.user != message.user:
-                count = count + 1
-        return count
 
+class dashboard(ListAPIView):
+    
+    serializer_class = dashboardSerializer
+    premission_classes = (IsAuthenticated,)
 
-# class message_notif(ListAPIView):
-
-#     permission_classes = (IsAuthenticated,)
-#     serializer_class = MessengerSerializer
-
-#     @ csrf_exempt
-#     def message_new(self, request, receiver=None):
-#         messages = Messenger.objects.filter(receiver_id=receiver)
-#         count = 0
-#         for message in messages:
-#             if message.is_read == False & request.user != message.user:
-#                 count = count + 1
-#         return count
-
-
+    def get(self, request, owner=None):
+        groups = Group.objects.filter(
+            active=True, owner=owner).order_by('created_at')
+        serializer = dashboardSerializer(groups, context={'request': request})
+        return Response(serializer.data)
 
 class message_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -219,6 +209,8 @@ class message_create(CreateAPIView):
         return Response(serializer.errors, status=400)
 
 
+
+        
 # class GPrating_create(CreateAPIView):
 #     permission_classes = (IsAuthenticated,)
 #     serializer_class = GP_rateSerializer
