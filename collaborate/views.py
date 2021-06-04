@@ -1,5 +1,5 @@
 from collaborate.serializers import GroupSerializer, GroupSearchSerializer, JoinRequestSerializer, \
-    AnswerJoinRequestSerializer, MessengerSerializer, dashboardSerializer, ChangePasswordSerializer  # GP_rateSerializer, Avg_RateSerializer
+    AnswerJoinRequestSerializer, MessengerSerializer, dashboardSerializer  # GP_rateSerializer, Avg_RateSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from collaborate.models import Group, JoinRequest, Messenger
@@ -35,6 +35,13 @@ class OwnedActiveGroupsView(ListAPIView):
     def get_queryset(self):
         return Group.objects.filter(owner=self.request.user, active=True).order_by('-created_at')
 
+
+class OwnedDeactiveGroupsView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GroupSerializer
+
+    def get_queryset(self):
+        return Group.objects.filter(owner=self.request.user, active=False).order_by('-created_at')
 
 class OwnedDemandsView(ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -199,11 +206,11 @@ class dashboard(ListAPIView):
         return Response(serializer.data)
 
 class profile(ListAPIView):
-    premission_classes = (IsAuthenticated,)
+    # premission_classes = (IsAuthenticated,)
     serializer_class = SimpleUserSerializer
 
     def get_queryset(self):
-        return get_user_model.objects.all()
+        return get_user_model().objects.all(), OwnedDeactiveGroupsView()
 
 
 
