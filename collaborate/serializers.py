@@ -119,6 +119,7 @@ class dashboardSerializer(serializers.ModelSerializer):
         
 
 
+
 # class GP_rateSerializer(serializers.ModelSerializer):
 #     user = SimpleUserSerializer(read_only=True)
 #     group = GroupSerializer(read_only = True)

@@ -34,6 +34,10 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # user
     path('api/users/register/', user_views.CreateUserView.as_view(), name='user_register'),
+    path('change_password/<int:pk>/', user_views.ChangePasswordView.as_view(),
+         name='auth_change_password'),
+    path('update_profile/<int:pk>/', user_views.UpdateProfileView.as_view(),
+         name='auth_update_profile'),
     # topics
     path('api/topics/children/<int:id>', topic_views.TopicChildrenView.as_view(), name='get_topic_children'),
     path('api/topics/roots', topic_views.TopicRootsView.as_view(), name='get_topic_children'),
@@ -64,7 +68,7 @@ urlpatterns = [
     #rating urls
     # path('api/rating/', collaborate_views.GPrating_create.as_view(),
     #      name='message-list'),
-
+    
     # dashboard
     path('api/dashboard/<int:owner>/', collaborate_views.dashboard.as_view(), name='personal_dashboard'),
     # documentation
