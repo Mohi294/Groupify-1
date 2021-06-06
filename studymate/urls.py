@@ -49,6 +49,7 @@ urlpatterns = [
     path('api/demands/all', collaborate_views.AllDemandsView.as_view(), name='all-demands'),
     path('api/demands/owned', collaborate_views.OwnedDemandsView.as_view(), name='owned-demands'),
     path('api/demands/search', collaborate_views.SearchDemandsView.as_view(), name='search-demands'),
+    path('api/delete/<int:pk>', collaborate_views.DeleteOwnedDeactiveGroupsView.as_view(), name='delete-demands'),
     # active groups
     path('api/groups/all', collaborate_views.AllActiveGroupsView.as_view(), name='all-active-groups'),
     path('api/groups/owned/', collaborate_views.OwnedActiveGroupsView.as_view(), name='owned-active-groups'),
@@ -67,8 +68,10 @@ urlpatterns = [
     path('api/messages/', collaborate_views.message_create.as_view(),
          name='message-create'),
     #rating urls
-    # path('api/rating/', collaborate_views.GPrating_create.as_view(),
-    #      name='message-list'),
+    path('api/rating/<int:rating_user>/<int:group_id>/', collaborate_views.GPrating_create.as_view(),
+         name='partner-rating'),
+    path('api/delete/<int:group_id>/',
+         collaborate_views.DeletePendingGroupsView.as_view(), name='delete-group'),
     
     # dashboard
     path('api/dashboard/<int:owner>/', collaborate_views.dashboard.as_view(), name='personal-dashboard'),

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from collaborate.models import Group, JoinRequest, Messenger#, GP_Rate, Avg_Rate
+from collaborate.models import Group, JoinRequest, Messenger, GP_Rate, Avg_Rate
 
 from user.serializers import SimpleUserSerializer
 from django.contrib.auth import get_user_model
@@ -22,8 +22,8 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = (
             'id', 'owner', 'active', 'created_at', 'hours_per_week', 'topic', 'specified_topic', 'weeks', 'slug',
-            'description')
-        read_only_fields = ('id', 'active', 'created_at')
+            'description', 'is_pending')
+        read_only_fields = ('id', 'active', 'created_at','is_pending')
         write_only_fields = ('specified_topic',)
 
     def create(self, validated_data):
@@ -120,20 +120,24 @@ class dashboardSerializer(serializers.ModelSerializer):
 
 
 
-# class GP_rateSerializer(serializers.ModelSerializer):
-#     user = SimpleUserSerializer(read_only=True)
-#     group = GroupSerializer(read_only = True)
-#     rate = serializers.SmallIntegerField()
-#     duration = serializers.SmallIntegerField()
+class GP_rateSerializer(serializers.ModelSerializer):
+    rating_user = SimpleUserSerializer(read_only=True)
+    rated_user = SimpleUserSerializer(read_only=True)
+    group = GroupSerializer(read_only = True)
+    rate = serializers.IntegerField()
+    duration = serializers.IntegerField()
     
-#     class Meta:
-#         model = GP_Rate
-#         fields = ['user', 'group', 'rate', 'duration']
+    class Meta:
+        model = GP_Rate
+        fields = ['user', 'group', 'rate', 'duration']
 
 
-# class Avg_RateSerializer(serializers.ModelSerializer):
-#     user = SimpleUserSerializer(read_only=True)
-#     overal_duration = serializers.IntegerField()
-#     class Meta:
-#         model = Avg_Rate
-#         fields = ['user', 'overal_duration']
+class Avg_RateSerializer(serializers.ModelSerializer):
+    user = SimpleUserSerializer(read_only=True)
+    avgRate = serializers.Field()
+
+
+
+    class Meta:
+        model = Avg_Rate
+        fields = ['user', 'overal_duration']

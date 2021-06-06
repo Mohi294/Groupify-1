@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from mptt.models import TreeForeignKey
@@ -20,6 +21,8 @@ class Group(models.Model):
     description = models.TextField(null=False, blank=True)
 
     members = models.ManyToManyField(get_user_model(), related_name='joined_groups', blank=True)
+
+    is_pending = models.BooleanField(default=False)
 
 
 class JoinRequest(models.Model):
@@ -49,28 +52,37 @@ class Messenger(models.Model):
         ordering = ('sentAt',)
 
 
-# class GP_Rate(models.Model):
-#     rating_user = models.ForeignKey(
-#         get_user_model(), on_delete=models.CASCADE, related_name='reting_user')
-#     rated_user = models.ForeignKey(
-#         get_user_model(), on_delete=models.CASCADE, related_name='reted_user')
-#     rate = models.SmallIntegerField(max_length=10)
-#     duration = models.SmallIntegerField(max_length=53, null=True, blank=True)
+class GP_Rate(models.Model):
+    group = models.ForeignKey(
+        Group, on_delete=models.CASCADE, related_name='related_group', null=False)
+    rating_user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name='reting_user')
+    rated_user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name='reted_user')
+    rate = models.IntegerField()
+    duration = models.IntegerField()
 
-#     def __str__(self):
-#         return self.rate
+    @property
+    def rateInDuration(self):
+        return rate * duration
+    def __str__(self):
+        return self.rate
 
-#     class Meta:
-#         ordering = ('user',)
 
-# class Avg_Rate(models.Model):
-#     user = models.ForeignKey(
-#         get_user_model(), on_delete=models.CASCADE)
-#     avgRate = models.FloatField(max_length=10)
-#     overal_duration = models.IntegerField()
+class Avg_Rate(models.Model):
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE)
     
-#     def __str__(self):
-#         return self.avgRate
+    @property
+    def avgRate(self):        
+        duration = GP_Rate.filter(rated_user = self.user).aggregate(Sum('duration'))
+        rateInDuration = GP_Rate.filter(
+            rated_user=self.user).aggregate(Sum('rateInDuration'))
 
-#     class Meta:
-#         ordering = ('user',)
+        return rateInDuration / duration
+        
+    def __str__(self):
+        return self.avgRate
+
+    class Meta:
+        ordering = ('user',)
