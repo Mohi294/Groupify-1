@@ -203,11 +203,15 @@ class dashboard(ListAPIView):
     serializer_class = dashboardSerializer
     premission_classes = (IsAuthenticated,)
 
-    def get(self, request, owner=None):
+    def get(self, request, owner):
         groups = Group.objects.filter(
-            active=True, owner=owner).order_by('created_at')
-        serializer = dashboardSerializer(groups, context={'request': request})
-        return Response(serializer.data)
+            active=True, members__id=owner)
+        for group in groups:
+            if owner in group.values_list('members__id'):
+                serializer = dashboardSerializer(groups, context={'request': request})
+                return Response(serializer.data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class profile(ListAPIView):
     premission_classes = (IsAuthenticated,)

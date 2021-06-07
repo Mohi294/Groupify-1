@@ -87,10 +87,12 @@ class AnswerJoinRequestSerializer(serializers.ModelSerializer):
 
 class MessengerSerializer(serializers.ModelSerializer):
     
-    sender = SimpleUserSerializer(read_only = True)
-    receiver = GroupSerializer(read_only=True)
+    sender = serializers.SlugRelatedField(
+        many=False, slug_field='username', queryset=User.objects.all())
+    receiver = serializers.SlugRelatedField(
+        many=False, slug_field='id', queryset=Group.objects.all())
     text = serializers.CharField()
-    sentAt = serializers.DateTimeField(read_only = True)
+    sentAt = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Messenger
@@ -103,20 +105,21 @@ class dashboardSerializer(serializers.ModelSerializer):
     
     newMesseges = serializers.SerializerMethodField()
 
-
-    class Meta:
-        model = Group
-        fields=['topic', 'owner', 'newMesseges']
-
     def get_newMesseges(self, obj):
         messeges = Messenger.objects.all()
         request = self.context.get('request')
+        
         count = 0
         for messege in messeges:
             if messege.receiver == obj and messege.is_read == False and messege.sender.id != request.user.id:
                 count = count + 1
-        return count
-        
+        obj.newMesseges = count
+        return obj.newMesseges       
+    
+
+    class Meta:
+        model = Group
+        fields=['topic', 'owner', 'newMesseges']
 
 
 
@@ -129,7 +132,7 @@ class GP_rateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = GP_Rate
-        fields = ['user', 'group', 'rate', 'duration']
+        fields = ['rating_user','rated_user', 'group', 'rate', 'duration']
 
 
 class Avg_RateSerializer(serializers.ModelSerializer):
