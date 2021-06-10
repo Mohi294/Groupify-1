@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-!!hdf_&6@kfk(6x_so8s*ca1v7eer736n^zbhesgfz2l30r8ro
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 # CORS_ALLOWED_ORIGINS=['http://127.0.0.1:3000,http://localhost:3000']
 
@@ -33,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     # 'widget_tweaks',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,11 +46,12 @@ INSTALLED_APPS = [
     'mptt',
     'topic.apps.TopicConfig',
     'collaborate.apps.CollaborateConfig',
-    'corsheaders',
+    
     
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -56,10 +59,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+
 
 ROOT_URLCONF = 'studymate.urls'
 
