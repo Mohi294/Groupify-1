@@ -63,18 +63,18 @@ urlpatterns = [
          name='answer-join-request'),
     # chat urls    
     path('chat/<int:receiver>/', collaborate_views.message_group.as_view(), name='group-chats'),
-    path('chat/<int:sender>/<int:receiver>/',
+    path('chat/<int:receiver>/',
          collaborate_views.message_user_show.as_view(), name='user-group-chat'),
     path('api/messages/', collaborate_views.message_create.as_view(),
          name='message-create'),
-    #rating urls
-    path('api/rating/<int:rating_user>/<int:group_id>/', collaborate_views.GPrating_create.as_view(),
+    # rating urls
+    path('api/rating/<int:group_id>/', collaborate_views.GPrating_create.as_view(),
          name='partner-rating'),
     path('api/delete/<int:group_id>/',
          collaborate_views.DeletePendingGroupsView.as_view(), name='delete-group'),
     
     # dashboard
-    path('api/dashboard/<int:owner>/', collaborate_views.dashboard.as_view(), name='personal-dashboard'),
+    path('api/dashboard/', collaborate_views.dashboard.as_view(), name='personal-dashboard'),
     # documentation
     path('docs/', include_docs_urls(title='Study mate API documentation', public=True))
 ]

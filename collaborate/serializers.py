@@ -30,10 +30,7 @@ class GroupSerializer(serializers.ModelSerializer):
         topic = validated_data.pop('specified_topic')
         validated_data['topic'] = topic
         return Group.objects.create(**validated_data)
-
-    
-
-    
+  
 
 
 # TODO: simple group serializer for read
@@ -99,12 +96,16 @@ class MessengerSerializer(serializers.ModelSerializer):
         fields = ['sender', 'receiver', 'text', 'sentAt']
 
 
-class dashboardSerializer(serializers.ModelSerializer):
-    owner = SimpleUserSerializer(many=False, read_only=True)
-    topic = TopicSerializer(many=False, read_only=True)
-    
+class dashboardSerializer(GroupSerializer):
+    # owner = serializers.SlugRelatedField(
+    #     many=False, slug_field='username', queryset=User.objects.all())
+    # topic = serializers.SlugRelatedField(
+    #     many=False, slug_field='name', queryset=Group.objects.all())
     newMesseges = serializers.SerializerMethodField()
 
+    # class Meta:
+    #     model = Group
+    #     fields = ['owner', 'topic', 'newMesseges']
     def get_newMesseges(self, obj):
         messeges = Messenger.objects.all()
         request = self.context.get('request')
@@ -116,10 +117,10 @@ class dashboardSerializer(serializers.ModelSerializer):
         obj.newMesseges = count
         return obj.newMesseges       
     
+    class Meta(GroupSerializer.Meta):
+        fields = GroupSerializer.Meta.fields + ('newMesseges',)
 
-    class Meta:
-        model = Group
-        fields=['topic', 'owner', 'newMesseges']
+    
 
 
 

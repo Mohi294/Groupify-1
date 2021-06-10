@@ -15,7 +15,7 @@ class Group(models.Model):
     active = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now, null=False)
     hours_per_week = models.PositiveSmallIntegerField(null=False)
-    topic = TreeForeignKey(Topic, on_delete=models.RESTRICT, null=False)
+    topic = TreeForeignKey(Topic, on_delete=models.RESTRICT, null=False, related_name='topic')
     weeks = models.PositiveSmallIntegerField(null=False)
     slug = models.CharField(max_length=150, null=False, blank=False)
     description = models.TextField(null=False, blank=True)
@@ -23,6 +23,9 @@ class Group(models.Model):
     members = models.ManyToManyField(get_user_model(), related_name='joined_groups', blank=True)
 
     is_pending = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return str(self.topic)
 
 
 class JoinRequest(models.Model):

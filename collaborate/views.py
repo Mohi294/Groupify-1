@@ -164,10 +164,10 @@ class message_user_show(ListAPIView):
     serializer_class = MessengerSerializer
 
     @csrf_exempt
-    def message_show(self, request, sender=None, receiver=None):
+    def message_show(self, request, receiver=None):
        
         messages = Messenger.objects.filter(
-            sender_id=sender, receiver_id=receiver, is_read=False)
+            sender_id=self.request.user.id, receiver_id=receiver, is_read=False)
         serializer = MessengerSerializer(
         messages, many=True, context={'request': request})
         
@@ -200,17 +200,12 @@ class message_group(ListAPIView):
 
 class dashboard(ListAPIView):
     
+    permission_classes = (IsAuthenticated,)
     serializer_class = dashboardSerializer
-    premission_classes = (IsAuthenticated,)
 
-    def get(self, request, owner):
-        groups = Group.objects.filter(
-            active=True, members__id=owner)
-        for group in groups:
-            if owner in group.values_list('members__id'):
-                serializer = dashboardSerializer(groups, context={'request': request})
-                return Response(serializer.data)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def get_queryset(self):
+        return self.request.user.joined_groups
+        
 
 
 class profile(ListAPIView):
@@ -240,23 +235,23 @@ class GPrating_create(CreateAPIView):
     serializer_class = GP_rateSerializer
     serializer = Avg_RateSerializer
 
-    def get_users(self, request, rating_user=None, group_id=None):
+    def get_users(self, request, group_id=None):
         group = Group.objects.filter(id=group_id)
         
-        if rating_user == group.owner:
+        if self.request.user == group.owner:
             return Group.members.filter(id=group.id)
         else:
             return Group.members.filter(id=group.id), GP_Rate.duration.filter(group=group)
         
     
 
-    def GPrating_create(self, request, rating_user=None, group_id=None):
+    def GPrating_create(self, request, group_id=None):
         group = Group.objects.filter(id=group_id)
         data = JSONParser().parse(request)
         serializer = GP_rateSerializer(data=data)
         
         if serializer.isvalid():
-            if rating_user == group.owner:
+            if self.request.user == group.owner:
                 group.is_pending = True
                 serializer.save()
                 return Response(serializer.data, status=201)
