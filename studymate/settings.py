@@ -25,9 +25,9 @@ SECRET_KEY = 'django-insecure-!!hdf_&6@kfk(6x_so8s*ca1v7eer736n^zbhesgfz2l30r8ro
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1, localhost']
+ALLOWED_HOSTS = ['*']
 
-CORS_ALLOWED_ORIGINS=['http://127.0.0.1:3000,http://localhost:3000']
+# CORS_ALLOWED_ORIGINS=['http://127.0.0.1:3000,http://localhost:3000']
 
 # Application definition
 
@@ -56,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'studymate.urls'
 
