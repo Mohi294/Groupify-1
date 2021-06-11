@@ -211,6 +211,7 @@ class dashboard(ListAPIView):
 class profile(ListAPIView):
     premission_classes = (IsAuthenticated,)
     serializer_class = SimpleUserSerializer
+    serializer = GroupSerializer
 
     def get_queryset(self):
         return self.request.user,  Group.objects.filter(owner=self.request.user, active=False).order_by('-created_at')
