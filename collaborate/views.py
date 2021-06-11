@@ -213,7 +213,7 @@ class profile(ListAPIView):
     serializer_class = SimpleUserSerializer
 
     def get_queryset(self):
-        return get_user_model().objects.all(), OwnedDeactiveGroupsView()
+        return self.request.user, OwnedDeactiveGroupsView()
 
 
 class message_create(CreateAPIView):

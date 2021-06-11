@@ -76,5 +76,5 @@ urlpatterns = [
     # dashboard
     path('api/dashboard/', collaborate_views.dashboard.as_view(), name='personal-dashboard'),
     # documentation
-    path('docs/', include_docs_urls(title='Study mate API documentation', public=True))
+#     path('docs/', include_docs_urls(title='Study mate API documentation', public=True))
 ]
