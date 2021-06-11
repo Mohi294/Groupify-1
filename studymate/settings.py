@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'mptt',
     'topic.apps.TopicConfig',
     'collaborate.apps.CollaborateConfig',
-    # 'corsheaders',    
+    'corsheaders',    
 ]
 
 MIDDLEWARE = [    
@@ -56,8 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
-    # 'django.middleware.common.CommonMiddleware',   
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',   
 ]
 
 
