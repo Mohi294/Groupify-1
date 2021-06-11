@@ -213,7 +213,7 @@ class profile(ListAPIView):
     serializer_class = SimpleUserSerializer
 
     def get_queryset(self):
-        return self.request.user, OwnedDeactiveGroupsView()
+        return self.request.user,  Group.objects.filter(owner=self.request.user, active=False).order_by('-created_at')
 
 
 class message_create(CreateAPIView):
