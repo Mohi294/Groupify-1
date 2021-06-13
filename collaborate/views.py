@@ -80,7 +80,7 @@ class SearchDemandsView(APIView):
     def post(self, request, format=None):
         serializer = GroupSearchSerializer(data=request.data)
         serializer_class = Avg_RateSerializer(data = request.data)
-        if serializer.is_valid():
+        if serializer.is_valid() and serializer_class.is_valid():
             # just searching in inactive groups (demands)
             topic = serializer.validated_data.get('topic')
             weeks = serializer.validated_data.get('weeks')
