@@ -75,7 +75,7 @@ class JoinedGroupsView(ListAPIView):
 
 
 class SearchDemandsView(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def post(self, request, format=None):
         serializer = GroupSearchSerializer(data=request.data)
@@ -92,7 +92,7 @@ class SearchDemandsView(APIView):
             ).order_by('hours_diff', 'weeks_diff')
             # TODO: paginate later
             group_serializer = GroupSerializer(groups, many=True)
-            return Response(group_serializer.data, status=200)
+            return Response(group_serializer.data, status=200), Response(Avg_RateSerializer.data)
         else:
             return Response(serializer.errors)
 

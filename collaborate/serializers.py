@@ -144,4 +144,4 @@ class Avg_RateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Avg_Rate
-        fields = ['user', 'overal_duration']
+        fields = ['user', 'overal_duration','avgRate']
