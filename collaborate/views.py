@@ -88,7 +88,7 @@ class SearchDemandsView(APIView):
             groups = Group.objects.filter(active=False, topic=topic).annotate(
                 weeks_diff=Func(F('weeks') - weeks, function='ABS'),
                 hours_diff=Func(F('hours_per_week') - hours, function='ABS')
-            ).order_by('hours_diff', 'weeks_diff')
+            ).order_by('hours_diff', 'weeks_diff').exclude(owner = self.request.user)
             # TODO: paginate later
             group_serializer = GroupSerializer(groups, many=True)
             return Response(group_serializer.data, status=200)
