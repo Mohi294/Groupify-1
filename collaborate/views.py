@@ -1,5 +1,5 @@
 from collaborate.serializers import GroupSerializer, GroupSearchSerializer, JoinRequestSerializer, \
-    AnswerJoinRequestSerializer, MessengerSerializer, dashboardSerializer, GP_rateSerializer, Avg_RateSerializer
+    AnswerJoinRequestSerializer, MessengerSerializer, dashboardSerializer, GP_rateSerializer #Avg_RateSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from collaborate.models import Group, JoinRequest, Messenger, GP_Rate
@@ -79,8 +79,8 @@ class SearchDemandsView(APIView):
 
     def post(self, request, format=None):
         serializer = GroupSearchSerializer(data=request.data)
-        serializer_class = Avg_RateSerializer(data = request.data)
-        if serializer.is_valid() and serializer_class.is_valid():
+        
+        if serializer.is_valid():
             # just searching in inactive groups (demands)
             topic = serializer.validated_data.get('topic')
             weeks = serializer.validated_data.get('weeks')
@@ -235,7 +235,7 @@ class message_create(CreateAPIView):
 class GPrating_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GP_rateSerializer
-    serializer = Avg_RateSerializer
+    
 
     def get_users(self, request, group_id=None):
         group = Group.objects.filter(id=group_id)
@@ -262,11 +262,11 @@ class GPrating_create(CreateAPIView):
                 redirect()
         return Response(serializer.errors, status = 400)
 
-class Avg_Show(APIView):
-    serializer_class = Avg_RateSerializer
+# class Avg_Show(APIView):
+#     serializer_class = Avg_RateSerializer
 
-    def get_queryset(self):
-        return Response(serializer_class.data, status=status.HTTP_200_OK)
+#     def get_queryset(self):
+#         return Response(serializer_class.data, status=status.HTTP_200_OK)
 
 
 # after second user submits
