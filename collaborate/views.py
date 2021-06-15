@@ -8,7 +8,7 @@ from django.db.models import Func, F
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.serializers import ValidationError
-from user.serializers import SimpleUserSerializer, userAndRateSerializer, profileSerializer
+from user.serializers import SimpleUserSerializer, userAndRateSerializer #, profileSerializer
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
@@ -209,14 +209,12 @@ class dashboard(ListAPIView):
 
 class profile(ListAPIView):
     premission_classes = (IsAuthenticated,)
-    serializer_class = profileSerializer
+    serializer_class = userAndRateSerializer
     
 
     def get_queryset(self):
-        user = get_user_model().objects.filter(id = self.request.user.id)
-        serializer = profileSerializer(user, many = True)
-        return Response(serializer.data)
-
+        return get_user_model().objects.filter(id = self.request.user.id)
+        
 
 class message_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)

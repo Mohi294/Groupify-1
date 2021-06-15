@@ -122,13 +122,13 @@ class userAndRateSerializer(serializers.ModelSerializer):
         return rateInDuration / duration
 
 
-class profileSerializer(serializers.ModelSerializer):
-    topics = serializers.SerializerMethodField()
+# class profileSerializer(serializers.ModelSerializer):
+#     topics = serializers.SerializerMethodField()
 
-    class Meta:
-        model = get_user_model()
-        fields = '__all__'
+#     class Meta:
+#         model = get_user_model()
+#         fields = '__all__'
 
-    def get_topics(self, obj):
-        return Group.objects.filter(owner__id=obj.id,
-                             active=False).order_by('-created_at')
+#     def get_topics(self, obj):
+#         return Group.objects.filter(owner__id=obj.id,
+#                              active=False).order_by('-created_at')
