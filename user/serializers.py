@@ -4,12 +4,15 @@ from django.core.exceptions import ValidationError
 
 from django.contrib.auth.password_validation import validate_password
 
+from collaborate.models import GP_Rate
+from django.db.models import Sum
+
 
 class SimpleUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username')
-        read_only_fields = ('username', 'id')
+        fields = ('id', 'username', 'email')
+        read_only_fields = ('username', 'id','email')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -99,3 +102,18 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class userAndRateSerializer(serializers.ModelSerializer):
+    avgRate = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = get_user_model()
+        fields = '__all__'
+
+    def get_avgRate(self, obj):
+        duration = GP_Rate.filter(user__id = obj.id).aggregate(Sum('duration'))
+        rateInDuration = GP_Rate.filter(
+            user__id=obj.id).aggregate(Sum('rateInDuration'))
+
+        return rateInDuration / duration

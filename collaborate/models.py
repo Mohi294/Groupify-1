@@ -73,7 +73,7 @@ class GP_Rate(models.Model):
 
 
 class Avg_Rate(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         get_user_model(), on_delete=models.CASCADE)
     
     @property

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from collaborate.models import Group, JoinRequest, Messenger, GP_Rate, Avg_Rate
 
-from user.serializers import SimpleUserSerializer
+from user.serializers import SimpleUserSerializer, userAndRateSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from topic.serializers import TopicSerializer
@@ -10,7 +10,7 @@ from rest_framework import status
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    owner = SimpleUserSerializer(many=False, read_only=True)
+    owner = userAndRateSerializer(many=False, read_only=True)
     topic = TopicSerializer(many=False, read_only=True)
     specified_topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all(), write_only=True)
 
@@ -144,4 +144,4 @@ class Avg_RateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Avg_Rate
-        fields = ['user', 'overal_duration','avgRate']
+        fields = ['user', 'avgRate']
