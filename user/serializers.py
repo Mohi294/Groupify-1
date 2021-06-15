@@ -11,8 +11,8 @@ from django.db.models import Sum
 class SimpleUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'email')
-        read_only_fields = ('username', 'id','email')
+        fields = ('id', 'username')
+        read_only_fields = ('username', 'id')
 
 
 class UserSerializer(serializers.ModelSerializer):
