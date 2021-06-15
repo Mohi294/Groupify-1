@@ -213,7 +213,7 @@ class profile(ListAPIView):
     
 
     def get_queryset(self):
-        user = self.request.user
+        user = get_user_model().objects.filter(id = self.request.user.id)
         serializer = profileSerializer(user, many = True)
         return Response(serializer.data)
 
