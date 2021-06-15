@@ -59,9 +59,9 @@ class GP_Rate(models.Model):
     group = models.ForeignKey(
         Group, on_delete=models.CASCADE, related_name='related_group', null=False)
     rating_user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name='reting_user')
+        get_user_model(), on_delete=models.CASCADE, related_name='rating_user')
     rated_user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name='reted_user')
+        get_user_model(), on_delete=models.CASCADE, related_name='rated_user')
     rate = models.IntegerField()
     duration = models.IntegerField()
 
