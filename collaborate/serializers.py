@@ -61,12 +61,12 @@ class JoinRequestSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         group = validated_data.pop('specified_group')
         validated_data['group'] = group
-        if group.owner_id == validated_data['id']:
-            raise serializers.ValidationError({"detail": "group owner cannot request to join."},
-                                              code=status.HTTP_403_FORBIDDEN)
-        if group.members.filter(user__id=validated_data['id']).exists():
-            raise serializers.ValidationError({"detail": "group members cannot request to join"},
-                                              code=status.HTTP_403_FORBIDDEN)
+        # if group.owner_id == validated_data['id']:
+        #     raise serializers.ValidationError({"detail": "group owner cannot request to join."},
+        #                                       code=status.HTTP_403_FORBIDDEN)
+        # if group.members.filter(user__id=validated_data['id']).exists():
+        #     raise serializers.ValidationError({"detail": "group members cannot request to join"},
+        #                                       code=status.HTTP_403_FORBIDDEN)
         return JoinRequest.objects.create(**validated_data)
 
 
