@@ -61,14 +61,39 @@ class JoinRequestSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         group = validated_data.pop('specified_group')
         validated_data['group'] = group
-        if group.owner_id == validated_data['user'].id:
+        if group.owner_id == validated_data['id']:
             raise serializers.ValidationError({"detail": "group owner cannot request to join."},
                                               code=status.HTTP_403_FORBIDDEN)
-        if group.members.filter(user__id=validated_data['user'].id).exists():
+        if group.members.filter(user__id=validated_data['id']).exists():
             raise serializers.ValidationError({"detail": "group members cannot request to join"},
                                               code=status.HTTP_403_FORBIDDEN)
         return JoinRequest.objects.create(**validated_data)
 
+
+# class JoinRequestSerializer(serializers.ModelSerializer):
+#     specified_group = serializers.PrimaryKeyRelatedField(
+#         queryset=Group.objects.all(), write_only=True)
+
+#     group = GroupSerializer(read_only=True)
+#     user = SimpleUserSerializer(read_only=True)
+
+#     # todo: group and user should be unique together
+#     class Meta:
+#         model = JoinRequest
+#         fields = ('id', 'group', 'specified_group', 'user', 'accepted')
+#         read_only_fields = ('id', 'group', 'user', 'accepted')
+#         write_only_fields = ('specified_group',)
+
+#     def create(self, validated_data):
+#         group = validated_data.pop('specified_group')
+#         validated_data['group'] = group
+#         if group.owner_id == validated_data['user'].id:
+#             raise serializers.ValidationError({"detail": "group owner cannot request to join."},
+#                                               code=status.HTTP_403_FORBIDDEN)
+#         if group.members.filter(user__id=validated_data['user'].id).exists():
+#             raise serializers.ValidationError({"detail": "group members cannot request to join"},
+#                                               code=status.HTTP_403_FORBIDDEN)
+#         return JoinRequest.objects.create(**validated_data)
 
 class AnswerJoinRequestSerializer(serializers.ModelSerializer):
     group = GroupSerializer(read_only=True)
