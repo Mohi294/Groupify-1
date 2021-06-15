@@ -215,7 +215,7 @@ class profile(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         serializer = profileSerializer(user, many = True)
-        return Response(serializer_class.data)
+        return Response(serializer.data)
 
 
 class message_create(CreateAPIView):
