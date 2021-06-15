@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 
 from django.contrib.auth.password_validation import validate_password
 
-from collaborate.models import GP_Rate
+from collaborate.models import GP_Rate, Group
 from django.db.models import Sum
 
 
@@ -112,8 +112,20 @@ class userAndRateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_avgRate(self, obj):
-        duration = GP_Rate.filter(user__id = obj.id).aggregate(Sum('duration'))
+        duration = GP_Rate.objects.filter(rated_user__id = obj.id).aggregate(Sum('duration'))
         rateInDuration = GP_Rate.filter(
-            user__id=obj.id).aggregate(Sum('rateInDuration'))
+            rated_user__id=obj.id).aggregate(Sum('rateInDuration'))
 
         return rateInDuration / duration
+
+
+class profileSerializer(serializers.ModelSerializer):
+    topics = serializers.SerializerMethodField()
+
+    class Meta:
+        model = get_user_model()
+        fields = '__all__'
+
+    def get_topics(self, obj):
+        return Group.objects.filter(owner__id=obj.id,
+                             active=False).order_by('-created_at')
