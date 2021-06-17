@@ -134,6 +134,7 @@ class AnswerJoinRequest(UpdateAPIView):
         if instance.accepted is not None:
             raise ValidationError({"detail": "request is already answered"}, code=status.HTTP_403_FORBIDDEN)
         if instance.accepted is False:
+            instance.delete()
             self.perform_destroy(serializer)
         if serializer.validated_data.get('accepted'):
             group = instance.group
