@@ -90,7 +90,7 @@ class MessengerSerializer(serializers.ModelSerializer):
         many=False, slug_field='id', queryset=Group.objects.all())
     text = serializers.CharField()
     sentAt = serializers.DateTimeField(read_only=True)
-    is_read = serializers.BolleanField()
+    is_read = serializers.BooleanField()
 
     class Meta:
         model = Messenger
