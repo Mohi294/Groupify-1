@@ -141,6 +141,9 @@ class AnswerJoinRequest(UpdateAPIView):
             group.members.add(instance.user)
             group.save()
             self.perform_update(serializer)
+
+            event = JoinRequest.objects.filter(group__id=group.id)
+            event.delete()
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         else:
             self.perform_update(serializer)
