@@ -148,7 +148,6 @@ class AnswerJoinRequest(UpdateAPIView):
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         else:
             instance.delete()
-            self.perform_destroy(serializer)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
 
