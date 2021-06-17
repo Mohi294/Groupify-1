@@ -49,7 +49,7 @@ class DeleteOwnedDeactiveGroupsView(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
     def delete(self, request, pk, format=None):
-        event = self.get_object(pk)
+        event = Group.objects.filter(id = pk, owner = self.request.user, active = False)        
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
