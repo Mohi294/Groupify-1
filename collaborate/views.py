@@ -139,7 +139,6 @@ class AnswerJoinRequest(UpdateAPIView):
                 group.active = True
                 group.members.add(group.owner)
             group.members.add(instance.user)
-            serializer.save()
             self.perform_update(serializer)
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         else:
