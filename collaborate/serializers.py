@@ -49,7 +49,7 @@ class JoinRequestSerializer(serializers.ModelSerializer):
     specified_group = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), write_only=True)
 
     group = GroupSerializer(read_only=True)
-    user = SimpleUserSerializer(read_only=True)
+    user = userAndRateSerializer(read_only=True)
 
     # todo: group and user should be unique together
     class Meta:
@@ -72,7 +72,7 @@ class JoinRequestSerializer(serializers.ModelSerializer):
 
 class AnswerJoinRequestSerializer(serializers.ModelSerializer):
     group = GroupSerializer(read_only=True)
-    user = SimpleUserSerializer(read_only=True)
+    user = userAndRateSerializer(read_only=True)
     accepted = serializers.BooleanField(allow_null=False)
     lookup_url_kwarg = 'request_id'
 
@@ -90,10 +90,11 @@ class MessengerSerializer(serializers.ModelSerializer):
         many=False, slug_field='id', queryset=Group.objects.all())
     text = serializers.CharField()
     sentAt = serializers.DateTimeField(read_only=True)
+    is_read = serializers.BolleanField()
 
     class Meta:
         model = Messenger
-        fields = ['sender', 'receiver', 'text', 'sentAt']
+        fields = '__all__'
 
 
 class dashboardSerializer(GroupSerializer):
