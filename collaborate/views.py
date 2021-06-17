@@ -277,7 +277,7 @@ class DeletePendingGroupsView(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
     def delete(self, request, group_id, format=None):
-        event = self.get_object(group_id)
+        event = Group.objects.filter(id = group_id)
         event.delete()
         redirect('personal-dashboard')
 
