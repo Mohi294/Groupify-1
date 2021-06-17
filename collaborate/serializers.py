@@ -79,7 +79,7 @@ class AnswerJoinRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = JoinRequest
         fields = ('id', 'group', 'user', 'accepted')
-        read_only_fields = ( 'user')
+        read_only_fields = ('user',)
 
 
 class MessengerSerializer(serializers.ModelSerializer):
