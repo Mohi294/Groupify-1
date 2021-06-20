@@ -179,7 +179,7 @@ class message_user_show(ListAPIView):
         return Response(serializer.data, safe=False)      
 
 
-class message_group(ListAPIView):
+class message_group(UpdateAPIView):
 
     permission_classes=(IsAuthenticated,)
     serializer_class=MessengerSerializer
@@ -206,7 +206,6 @@ class message_group(ListAPIView):
                         message.save()
                         
                 serializer = MessengerSerializer(messages)
-                self.perform_update(serializer)
                 return Response(serializer.data)
 
 
