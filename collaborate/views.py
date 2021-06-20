@@ -204,9 +204,8 @@ class message_group(ListAPIView):
                     if message.sender != self.request.user:
                         message.is_read = True
                         message.save()
-                serializer = MessengerSerializer(
-                    messages, many=True, context={'request': request})
-                return Response(serializer.data, safe=False)
+                serializer = MessengerSerializer(messages, many=True)
+                return Response(serializer.data)
 
 
 
