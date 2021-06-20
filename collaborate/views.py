@@ -181,7 +181,7 @@ class message_user_show(ListAPIView):
 
 class message_group(ListAPIView):
 
-    # permission_classes=(IsAuthenticated,)
+    permission_classes=(IsAuthenticated,)
     serializer_class=MessengerSerializer
     lookup_url = 'pk'
 
@@ -249,10 +249,12 @@ class profile(ListAPIView):
 class GPrating_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GP_rateSerializer
-    
+    lookup_url = 'pk'
 
-    def get_users(self, request, group_id):
-        group = Group.objects.filter(id=group_id)
+    def get_queryset(self):
+        pk = int(self.kwargs.get(self.lookup_url))
+        
+        group = Group.objects.filter(id=pk)
         
         if self.request.user == group.owner:
             return Group.members.filter(id=group.id)

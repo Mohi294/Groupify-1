@@ -98,15 +98,8 @@ class MessengerSerializer(serializers.ModelSerializer):
 
 
 class dashboardSerializer(GroupSerializer):
-    # owner = serializers.SlugRelatedField(
-    #     many=False, slug_field='username', queryset=User.objects.all())
-    # topic = serializers.SlugRelatedField(
-    #     many=False, slug_field='name', queryset=Group.objects.all())
     newMesseges = serializers.SerializerMethodField()
 
-    # class Meta:
-    #     model = Group
-    #     fields = ['owner', 'topic', 'newMesseges']
     def get_newMesseges(self, obj):
         messeges = Messenger.objects.all()
         request = self.context.get('request')
@@ -135,14 +128,3 @@ class GP_rateSerializer(serializers.ModelSerializer):
     class Meta:
         model = GP_Rate
         fields = ['rating_user','rated_user', 'group', 'rate', 'duration']
-
-
-# class Avg_RateSerializer(serializers.ModelSerializer):
-#     user = SimpleUserSerializer(read_only=True)
-#     avgRate = serializers.Field()
-
-
-
-#     class Meta:
-#         model = Avg_Rate
-#         fields = ['user', 'avgRate']
