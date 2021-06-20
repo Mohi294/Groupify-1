@@ -251,7 +251,7 @@ class GPrating_create(CreateAPIView):
     serializer_class = GP_rateSerializer
     
 
-    def get_users(self, request, group_id=None):
+    def get_users(self, request, group_id):
         group = Group.objects.filter(id=group_id)
         
         if self.request.user == group.owner:
@@ -261,7 +261,7 @@ class GPrating_create(CreateAPIView):
         
     
 
-    def GPrating_create(self, request, group_id=None):
+    def GPrating_create(self, request, group_id):
         group = Group.objects.filter(id=group_id)
         data = JSONParser().parse(request)
         serializer = GP_rateSerializer(data=data)
