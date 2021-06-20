@@ -117,8 +117,6 @@ class userAndRateSerializer(serializers.ModelSerializer):
         for i in GP_Rate.objects.filter(rated_user__id=obj.id):
             rate_In_Duration.append(i.rateInDuration)
         RateInDuration = sum(rate_In_Duration)
-        # sum(i.rateInDuration()
-        #                      for i in GP_Rate.objects.filter(rated_user__id=obj.id))
         
         if duration == None:
             duration = 1

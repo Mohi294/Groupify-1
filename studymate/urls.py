@@ -72,7 +72,7 @@ urlpatterns = [
     # rating urls
     path('api/rating/<int:pk>/', collaborate_views.GPrating_create.as_view(),
          name='partner-rating'),
-    path('api/delete/<int:group_id>/',
+    path('api/pending_delete/<int:group_id>/',
          collaborate_views.DeletePendingGroupsView.as_view(), name='delete-group'),
     
     # dashboard

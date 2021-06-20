@@ -230,7 +230,7 @@ class message_create(CreateAPIView):
         
 class dashboard(ListAPIView):
     
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = dashboardSerializer
 
     def get_queryset(self):
@@ -269,7 +269,7 @@ class GPrating_create(CreateAPIView):
         serializer = GP_rateSerializer(data=data)
         
         if serializer.isvalid():
-            if self.request.user.username == group.owner:
+            if self.request.user == group.owner:
                 group.is_pending = True
                 group.save()
                 serializer.save()
@@ -279,15 +279,12 @@ class GPrating_create(CreateAPIView):
                 redirect()
         return Response(serializer.errors, status = 400)
 
-  
-
-
 
 class DeletePendingGroupsView(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
     def delete(self, request, group_id, format=None):
         event = Group.objects.filter(id = group_id)
         event.delete()
-        redirect('personal-dashboard')
+        return redirect('personal-dashboard')
 
