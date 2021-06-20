@@ -113,11 +113,14 @@ class userAndRateSerializer(serializers.ModelSerializer):
 
     def get_avgRate(self, obj):
         duration =list(GP_Rate.objects.filter(rated_user__id=obj.id).aggregate(Sum('duration')).values())[0]
-        rate_In_Duration = 0
-        rate_In_Duration = sum(i.rateInDuration()
-                             for i in GP_Rate.objects.filter(rated_user__id=obj.id))
+        rate_In_Duration = []
+        for i in GP_Rate.objects.filter(rated_user__id=obj.id):
+            rate_In_Duration.append(i.rateInDuration)
+        RateInDuration = sum(rate_In_Duration)
+        # sum(i.rateInDuration()
+        #                      for i in GP_Rate.objects.filter(rated_user__id=obj.id))
         
         if duration == None:
             duration = 1
-        return rate_In_Duration / duration
+        return RateInDuration / duration
 
