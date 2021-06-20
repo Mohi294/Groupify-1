@@ -188,6 +188,7 @@ class message_group(ListAPIView):
     def get_queryset(self):
         pk = int(self.kwargs.get(self.lookup_url))
         messages = Messenger.objects.filter(receiver__id=pk)
+        return messages
     
 
     @ csrf_exempt
