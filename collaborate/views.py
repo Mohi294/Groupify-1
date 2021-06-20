@@ -272,7 +272,7 @@ class GPrating_create(CreateAPIView):
             if self.request.user == group.owner:
                 group.is_pending = True
                 group.save()
-                serializer.save()
+                self.perform_update(serializer)
                 return Response(serializer.data, status=201)
             else:
                 serializer.save()
