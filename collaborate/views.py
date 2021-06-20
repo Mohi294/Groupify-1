@@ -179,7 +179,7 @@ class message_user_show(ListAPIView):
         return Response(serializer.data, safe=False)      
 
 
-class message_group(UpdateAPIView):
+class message_group(APIView):
 
     permission_classes=(IsAuthenticated,)
     serializer_class=MessengerSerializer
