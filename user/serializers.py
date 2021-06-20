@@ -113,22 +113,11 @@ class userAndRateSerializer(serializers.ModelSerializer):
 
     def get_avgRate(self, obj):
         duration =list(GP_Rate.objects.filter(rated_user__id=obj.id).aggregate(Sum('duration')).values())[0]
-        rateInDuration = sum(i.rateInDuration()
+        rate_In_Duration = 0
+        rate_In_Duration = sum(i.rateInDuration()
                              for i in GP_Rate.objects.filter(rated_user__id=obj.id))
-        # GP_Rate.objects.filter(
-        #     rated_user__id=obj.id).aggregate(Sum('rateInDuration'))
+        
         if duration == None:
             duration = 1
-        return rateInDuration / duration
+        return rate_In_Duration / duration
 
-
-# class profileSerializer(serializers.ModelSerializer):
-#     topics = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = get_user_model()
-#         fields = '__all__'
-
-#     def get_topics(self, obj):
-#         return Group.objects.filter(owner__id=obj.id,
-#                              active=False).order_by('-created_at')
