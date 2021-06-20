@@ -197,7 +197,7 @@ class message_group(ListAPIView):
             if receiver.is_pending == True:
                 redirect('partner-rating')
             else:    
-                messages = Messenger.objects.filter(receiver_id=pk)
+                messages = Messenger.objects.filter(receiver=receiver)
                 serializer=MessengerSerializer(
                 messages, many=True, context={'request': request})
                 for message in messages:
