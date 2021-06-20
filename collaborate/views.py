@@ -255,12 +255,12 @@ class GP_rate_members(ListAPIView):
     def get_queryset(self):
         pk = int(self.kwargs.get(self.lookup_url))
 
-        group = Group.objects.filter(id=pk)
-
-        if self.request.user.id == group.owner.id:
-            return Group.members.filter(id=group.id)
-        else:
-            return Group.members.filter(id=group.id), GP_Rate.duration.filter(group=group)
+        groups = Group.objects.filter(id=pk)
+        for group in groups:
+            if self.request.user.id == group.owner.id:
+                return Group.members.filter(id=group.id)
+            else:
+                return Group.members.filter(id=group.id), GP_Rate.duration.filter(group=group)
 
 class GPrating_create(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
