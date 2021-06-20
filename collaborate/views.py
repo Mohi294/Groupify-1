@@ -246,22 +246,26 @@ class profile(ListAPIView):
     def get_queryset(self):
         return get_user_model().objects.filter(id=self.request.user.id)
         
-class GPrating_create(CreateAPIView):
+
+class GP_rate_members(ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GP_rateSerializer
     lookup_url = 'pk'
 
     def get_queryset(self):
         pk = int(self.kwargs.get(self.lookup_url))
-        
+
         group = Group.objects.filter(id=pk)
-        
+
         if self.request.user.id == group.owner.id:
             return Group.members.filter(id=group.id)
         else:
             return Group.members.filter(id=group.id), GP_Rate.duration.filter(group=group)
-        
-    
+
+class GPrating_create(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GP_rateSerializer
+    lookup_url = 'pk'    
 
     def GPrating_create(self, request, pk):
         groups = Group.objects.filter(id=pk)
@@ -280,7 +284,7 @@ class GPrating_create(CreateAPIView):
 
 
 class DeletePendingGroupsView(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
     def delete(self, request, group_id, format=None):
         event = Group.objects.filter(id = group_id)

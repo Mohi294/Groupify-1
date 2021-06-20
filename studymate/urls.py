@@ -70,6 +70,8 @@ urlpatterns = [
     path('api/messages/', collaborate_views.message_create.as_view(),
          name='message-create'),
     # rating urls
+    path('api/rating_members/<int:pk>/', collaborate_views.GP_rate_members.as_view(),
+         name='partner-view'),
     path('api/rating/<int:pk>/', collaborate_views.GPrating_create.as_view(),
          name='partner-rating'),
     path('api/pending_delete/<int:group_id>/',
