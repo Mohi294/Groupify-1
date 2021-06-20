@@ -202,7 +202,7 @@ class message_group(ListAPIView):
                 serializer=MessengerSerializer(
                 messages, many=True, context={'request': request})
                 for message in messages:
-                    if message.sender != request.user:
+                    if message.sender != self.request.user:
                         message.is_read = True
                         message.save()
                 return Response(serializer.data, safe=False)
