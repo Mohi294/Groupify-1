@@ -263,8 +263,8 @@ class GPrating_create(CreateAPIView):
         
     
 
-    def GPrating_create(self, request, group_id):
-        group = Group.objects.filter(id=group_id)
+    def GPrating_create(self, request, pk):
+        group = Group.objects.filter(id=pk)
         data = JSONParser().parse(request)
         serializer = GP_rateSerializer(data=data)
         

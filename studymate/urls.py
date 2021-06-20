@@ -70,7 +70,7 @@ urlpatterns = [
     path('api/messages/', collaborate_views.message_create.as_view(),
          name='message-create'),
     # rating urls
-    path('api/rating/<int:group_id>/', collaborate_views.GPrating_create.as_view(),
+    path('api/rating/<int:pk>/', collaborate_views.GPrating_create.as_view(),
          name='partner-rating'),
     path('api/delete/<int:group_id>/',
          collaborate_views.DeletePendingGroupsView.as_view(), name='delete-group'),
