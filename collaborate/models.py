@@ -71,21 +71,3 @@ class GP_Rate(models.Model):
     def __str__(self):
         return self.rate
 
-
-# class Avg_Rate(models.Model):
-#     user = models.OneToOneField(
-#         get_user_model(), on_delete=models.CASCADE)
-    
-#     @property
-#     def avgRate(self):        
-#         duration = GP_Rate.filter(rated_user = self.user).aggregate(Sum('duration'))
-#         rateInDuration = GP_Rate.filter(
-#             rated_user=self.user).aggregate(Sum('rateInDuration'))
-
-#         return rateInDuration / duration
-        
-#     def __str__(self):
-#         return self.avgRate
-
-#     class Meta:
-#         ordering = ('user',)

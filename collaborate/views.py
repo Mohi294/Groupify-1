@@ -278,6 +278,10 @@ class GPrating_create(CreateAPIView):
                 redirect()
         return Response(serializer.errors, status = 400)
 
+  
+
+
+
 class DeletePendingGroupsView(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
