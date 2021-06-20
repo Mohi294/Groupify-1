@@ -256,7 +256,7 @@ class GPrating_create(CreateAPIView):
         
         group = Group.objects.filter(id=pk)
         
-        if self.request.user == group.owner:
+        if self.request.user.username == group.owner:
             return Group.members.filter(id=group.id)
         else:
             return Group.members.filter(id=group.id), GP_Rate.duration.filter(group=group)
@@ -269,7 +269,7 @@ class GPrating_create(CreateAPIView):
         serializer = GP_rateSerializer(data=data)
         
         if serializer.isvalid():
-            if self.request.user == group.owner:
+            if self.request.user.username == group.owner:
                 group.is_pending = True
                 serializer.save()
                 return Response(serializer.data, status=201)
