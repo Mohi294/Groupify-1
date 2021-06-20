@@ -179,7 +179,7 @@ class message_user_show(ListAPIView):
         return Response(serializer.data, safe=False)      
 
 
-class message_group(UpdateAPIView):
+class message_group(ListAPIView):
 
     permission_classes=(IsAuthenticated,)
     serializer_class=MessengerSerializer
@@ -192,7 +192,7 @@ class message_group(UpdateAPIView):
     
 
     @csrf_exempt
-    def update(self, request, pk):
+    def get_notificaton(self, request, pk):
         groups = Group.objects.filter(id=pk)
         for receiver in groups:
             if receiver.is_pending == True:
