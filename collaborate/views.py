@@ -183,25 +183,45 @@ class message_group(ListAPIView):
 
     permission_classes=(IsAuthenticated,)
     serializer_class=MessengerSerializer
-    
+    lookup_url = 'pk'
+
     def get_queryset(self):
-        return Messenger.objects.filter(receiver__owner = self.request.user.id)
+        pk = int(self.kwargs.get(self.lookup_url))
+        messages = Messenger.objects.filter(reciever__id=pk)
+    
 
     @ csrf_exempt
-    def update(self, request, receiver=None):
-        if receiver.is_pending == True:
-            redirect('partner-rating')
-        else:    
-            messages=Messenger.objects.filter(receiver_id = receiver)
-            serializer=MessengerSerializer(
-            messages, many=True, context={'request': request})
-            for message in messages:
-                if message.sender != request.user:
-                    message.is_read = True
-                    message.save()
-            return Response(serializer.data, safe=False)
+    def update(self, request, pk=None):
+        groups = Group.objects.filter(id=pk)
+        for receiver in groups:
+            if receiver.is_pending == True:
+                redirect('partner-rating')
+            else:    
+                messages=Messenger.objects.filter(receiver_id = pk)
+                serializer=MessengerSerializer(
+                messages, many=True, context={'request': request})
+                for message in messages:
+                    if message.sender != request.user:
+                        message.is_read = True
+                        message.save()
+                return Response(serializer.data, safe=False)
 
 
+
+class message_create(CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessengerSerializer
+
+    @csrf_exempt
+    def message_create(self, request, sender=None, receiver=None):
+        data = JSONParser().parse(request)
+        serializer = MessengerSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+        
 class dashboard(ListAPIView):
     
     permission_classes = (IsAuthenticated,)
@@ -218,22 +238,7 @@ class profile(ListAPIView):
     
 
     def get_queryset(self):
-        return get_user_model().objects.filter(id = self.request.user.id)
-        
-
-class message_create(CreateAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = MessengerSerializer
-
-    @csrf_exempt
-    def message_create(self, request, sender=None, receiver=None):
-        data = JSONParser().parse(request)
-        serializer = MessengerSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
-
+        return get_user_model().objects.filter(id=self.request.user.id)
         
 class GPrating_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)
