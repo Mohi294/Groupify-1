@@ -191,7 +191,7 @@ class message_group(ListAPIView):
         return messages
     
 
-    @ csrf_exempt
+    @csrf_exempt
     def update(self, request, pk=None):
         groups = Group.objects.filter(id=pk)
         for receiver in groups:
@@ -201,10 +201,10 @@ class message_group(ListAPIView):
                 messages = Messenger.objects.filter(receiver=receiver)
                 
                 for message in messages:
-                    if message.sender != self.request.user.id:
+                    if message.sender != self.request.user:
                         message.is_read = True
                         message.save()
-                serializer = MessengerSerializer(messages, many=True)
+                serializer = MessengerSerializer(messages)
                 return Response(serializer.data)
 
 
