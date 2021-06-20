@@ -179,7 +179,7 @@ class message_user_show(ListAPIView):
         return Response(serializer.data, safe=False)      
 
 
-class message_group(APIView):
+class message_group(ListAPIView):
 
     permission_classes=(IsAuthenticated,)
     serializer_class=MessengerSerializer
@@ -191,6 +191,10 @@ class message_group(APIView):
         return messages
     
 
+class messege_update(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessengerSerializer
+    
     @csrf_exempt
     def update(self, request, pk):
         groups = Group.objects.filter(id=pk)

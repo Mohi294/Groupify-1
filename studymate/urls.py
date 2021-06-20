@@ -63,6 +63,8 @@ urlpatterns = [
          name='answer-join-request'),
     # chat urls    
     path('chat/<int:pk>/', collaborate_views.message_group.as_view(), name='group-chats'),
+    path('chat/update/<int:pk>/', collaborate_views.messege_update.as_view(),
+         name='group-chats'),
 #     path('chat/<int:receiver>/',
 #          collaborate_views.message_user_show.as_view(), name='user-group-chat'),
     path('api/messages/', collaborate_views.message_create.as_view(),
