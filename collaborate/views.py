@@ -256,7 +256,7 @@ class GPrating_create(CreateAPIView):
         
         group = Group.objects.filter(id=pk)
         
-        if self.request.user.user == group.owner:
+        if self.request.user == group.owner:
             return Group.members.filter(id=group.id)
         else:
             return Group.members.filter(id=group.id), GP_Rate.duration.filter(group=group)
