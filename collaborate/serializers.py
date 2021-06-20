@@ -114,8 +114,10 @@ class dashboardSerializer(GroupSerializer):
 class GP_rateSerializer(serializers.ModelSerializer):
     group = serializers.SlugRelatedField(
         many=False, slug_field='id', queryset=Group.objects.all())
-    rating_user = SimpleUserSerializer(read_only=True)
-    rated_user = SimpleUserSerializer(read_only=True)    
+    rating_user = serializers.SlugRelatedField(
+        many=False, slug_field='username', queryset=User.objects.all())
+    rated_user = serializers.SlugRelatedField(
+        many=False, slug_field='username', queryset=User.objects.all())   
     rate = serializers.IntegerField()
     duration = serializers.IntegerField()
     
