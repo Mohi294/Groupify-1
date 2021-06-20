@@ -181,7 +181,7 @@ class message_user_show(ListAPIView):
 
 class message_group(ListAPIView):
 
-    permission_classes=(IsAuthenticated,)
+    # permission_classes=(IsAuthenticated,)
     serializer_class=MessengerSerializer
     lookup_url = 'pk'
 
@@ -276,14 +276,6 @@ class GPrating_create(CreateAPIView):
                 redirect()
         return Response(serializer.errors, status = 400)
 
-# class Avg_Show(APIView):
-#     serializer_class = Avg_RateSerializer
-
-#     def get_queryset(self):
-#         return Response(serializer_class.data, status=status.HTTP_200_OK)
-
-
-# after second user submits
 class DeletePendingGroupsView(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
