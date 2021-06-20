@@ -67,7 +67,7 @@ class GP_Rate(models.Model):
 
     @property
     def rateInDuration(self):
-        return rate * duration
+        return self.rate * self.duration
     def __str__(self):
         return self.rate
 
