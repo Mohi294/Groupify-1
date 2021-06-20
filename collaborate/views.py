@@ -264,19 +264,18 @@ class GPrating_create(CreateAPIView):
     
 
     def GPrating_create(self, request, pk):
-        group = Group.objects.filter(id=pk)
+        groups = Group.objects.filter(id=pk)
         data = JSONParser().parse(request)
         serializer = GP_rateSerializer(data=data)
         
         if serializer.isvalid():
-            if self.request.user.id == group.owner.id:
-                group.is_pending = True
-                group.save()
+            for group in groups:
+                if self.request.user.id == group.owner.id:
+                    group.is_pending = True
+                    group.save()
                 self.perform_update(serializer)
                 return Response(serializer.data, status=201)
-            else:
-                serializer.save()
-                redirect()
+                
         return Response(serializer.errors, status = 400)
 
 
