@@ -192,7 +192,7 @@ class message_group(ListAPIView):
     
 
     @csrf_exempt
-    def update(self, request, pk=None):
+    def update(self, request, pk):
         groups = Group.objects.filter(id=pk)
         for receiver in groups:
             if receiver.is_pending == True:
