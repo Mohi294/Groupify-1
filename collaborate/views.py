@@ -258,9 +258,9 @@ class GP_rate_members(ListAPIView):
         groups = Group.objects.filter(id=pk)
         for group in groups:
             if self.request.user.id == group.owner.id:
-                return Group.objects.filter(id=group.id).members
+                return group.members
             else:
-                return Group.objects.filter(id=group.id).members, GP_Rate.objects.filter(group=group).duration
+                return group.members, GP_Rate.objects.filter(group=group)
 
 class GPrating_create(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
