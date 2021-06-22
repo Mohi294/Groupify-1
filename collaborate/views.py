@@ -295,6 +295,7 @@ class DeletePendingGroupsView(APIView):
     serializer_class = GroupSerializer
     lookup_url = 'pk'
     def delete(self, request, pk, format=None):
+        pk = int(self.kwargs.get(self.lookup_url))
         event = Group.objects.filter(id = pk)
         event.delete()
         return redirect('personal-dashboard')
