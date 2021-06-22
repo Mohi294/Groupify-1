@@ -77,8 +77,8 @@ class AnswerJoinRequestSerializer(serializers.ModelSerializer):
 
 class MessengerSerializer(serializers.ModelSerializer):
     
-    sender = serializers.SlugRelatedField(
-        many=True, slug_field='username', queryset=User.objects.all())
+    sender = SimpleUserSerializer(many = True)#serializers.SlugRelatedField(
+        #many=False, slug_field='username', queryset=User.objects.all())
     receiver = serializers.SlugRelatedField(
         many=False, slug_field='id', queryset=Group.objects.all())
     text = serializers.CharField()
