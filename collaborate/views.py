@@ -273,14 +273,24 @@ class GPrating_create(CreateAPIView):
         serializer = GP_rateSerializer(data=data)
         
         if serializer.isvalid():
-            for group in groups:
-                if group.owner == self.request.user:
-                    group.is_pending = True
-                    group.save()
-                serializer.save()
-                return Response(serializer.data, status=201)
+            serializer.save()
+            return Response(serializer.data, status=201)
                 
         return Response(serializer.errors, status = 400)
+
+
+class GPrating_update(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GP_rateSerializer
+    lookup_url = 'pk'
+
+    def update(self, request, pk):
+        groups = Group.objects.filter(id=pk)
+        for group in groups:
+            if group.owner == self.request.user:
+                group.is_pending = True
+                group.save()
+        serializer = GP_rateSerializer(groups)
 
 
 class DeletePendingGroupsView(APIView):
