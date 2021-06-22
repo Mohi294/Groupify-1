@@ -291,6 +291,7 @@ class GPrating_update(UpdateAPIView):
                 group.is_pending = True
                 group.save()
         serializer = GP_rateSerializer(groups)
+        return Response(serializer.data, status=201)
 
 
 class DeletePendingGroupsView(APIView):
