@@ -262,7 +262,7 @@ class GP_rate_members(ListAPIView):
                 for duration in durations:
                     return duration.duration
 
-class GPrating_create(UpdateAPIView):
+class GPrating_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GP_rateSerializer
     lookup_url = 'pk'    
