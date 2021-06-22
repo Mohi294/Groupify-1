@@ -76,7 +76,7 @@ urlpatterns = [
          name='partner-rating'),
     path('api/pending_delete/<int:group_id>/',
          collaborate_views.DeletePendingGroupsView.as_view(), name='delete-group'),
-    path('api/pending_update/<int:group_id>/',
+    path('api/pending_update/<int:pk>/',
          collaborate_views.GPrating_update.as_view(), name='update-group'),
     
     # dashboard
