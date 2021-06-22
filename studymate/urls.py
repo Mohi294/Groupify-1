@@ -74,7 +74,7 @@ urlpatterns = [
          name='partner-view'),
     path('api/rating/<int:pk>/', collaborate_views.GPrating_create.as_view(),
          name='partner-rating'),
-    path('api/pending_delete/<int:group_id>/',
+    path('api/pending_delete/<int:pk>/',
          collaborate_views.DeletePendingGroupsView.as_view(), name='delete-group'),
     path('api/pending_update/<int:pk>/',
          collaborate_views.GPrating_update.as_view(), name='update-group'),
