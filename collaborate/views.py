@@ -230,7 +230,7 @@ class message_create(CreateAPIView):
         
 class dashboard(ListAPIView):
     
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = dashboardSerializer
 
     def get_queryset(self):
