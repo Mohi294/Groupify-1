@@ -210,7 +210,7 @@ class messege_update(UpdateAPIView):
                         message.save()
                         
                 serializer = MessengerSerializer(messages)
-                return Response(serializer.data)
+                return Response(status=201)
 
 
 
@@ -259,8 +259,7 @@ class GP_rate_members(ListAPIView):
         for gp_rate in gp_rates:
             if self.request.user != gp_rate.group.owner:
                 durations = GP_Rate.objects.filter(rating_user=gp_rate.group.owner)
-                for duration in durations:
-                    return duration.duration
+                return durations.duration
 
 class GPrating_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)
