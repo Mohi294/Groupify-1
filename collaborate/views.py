@@ -290,10 +290,10 @@ class GPrating_update(UpdateAPIView):
         return Response(status=201)
 
 
-class DeletePendingGroupsView(UpdateAPIView):
+class DeletePendingGroupsView(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GroupSerializer
-    def update(self, request, group_id, format=None):
+    def delete(self, request, group_id, format=None):
         event = Group.objects.filter(id = group_id)
         event.delete()
         return redirect('personal-dashboard')
