@@ -57,7 +57,7 @@ class Messenger(models.Model):
 
 class GP_Rate(models.Model):
     group = models.ForeignKey(
-        Group, on_delete=models.CASCADE, related_name='related_group')
+        Group, on_delete=models.RESTRICT, related_name='related_group')
     rating_user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name='rating_user')
     rated_user = models.ForeignKey(
