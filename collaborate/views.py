@@ -259,7 +259,8 @@ class GP_rate_members(ListAPIView):
         for gp_rate in gp_rates:
             if self.request.user != gp_rate.group.owner:
                 durations = GP_Rate.objects.filter(rating_user=gp_rate.group.owner)
-                return durations.duration
+                for duration in durations:
+                    return duration.duration
 
 class GPrating_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)
