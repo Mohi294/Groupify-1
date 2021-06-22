@@ -256,8 +256,7 @@ class GP_rate_members(ListAPIView):
         pk = int(self.kwargs.get(self.lookup_url))
 
         gp_rates = GP_Rate.objects.filter(group__id=pk).exclude(group__owner = self.request.user)
-        for gp_rate in gp_rates:
-            return gp_rate.duration
+        return gp_rates
 
 class GPrating_create(CreateAPIView):
     permission_classes = (IsAuthenticated,)
